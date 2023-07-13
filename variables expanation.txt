@@ -1,0 +1,2 @@
+mhp = monster health
+bmhp = the starting monster health

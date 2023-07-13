@@ -1,6 +1,0 @@
-input = "1"
-
-def user_input():
-    input = ("type input")
-    if input == "a" :
-        
