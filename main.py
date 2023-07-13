@@ -1,5 +1,4 @@
 import random
-import math
 
 minhp = 1
 maxhp = 1
