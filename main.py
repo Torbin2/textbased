@@ -64,7 +64,7 @@ def user_input(minhp ,maxhp):
     print("no current tests")
   
   elif player_input == "i":
-    print(f"{playerhp}/{maxplayerhp} health\n{xp} xp\n{cheese} cheese\n {dodge_chance}/10 dodge chance (lower is better)")
+    print(f"{playerhp}/{maxplayerhp} health\n{xp} xp\n{cheese} cheese\n{dodge_chance}/10 dodge chance (lower is better)")
 
   elif player_input == "f" :
     spawnrng = random.randint(1,20)
