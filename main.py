@@ -5,11 +5,6 @@ print("input help for commands")
 spawned = False
 xp = 1
 level = 1 
-#skip = input("skip?")
-
-#if skip == "qwerty":
-#  level = 2
-#  xp = 10
 
 def user_input(minhp ,maxhp):
   player_input = input("input = ")
