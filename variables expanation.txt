@@ -1,2 +1,4 @@
 mhp = monster health
 bmhp = the starting monster health
+spawnrng = random number that decides what spawns
+dodge_chance = chance to get hit by a monsters stack goes up or down depending on if you just got hit or dodged
