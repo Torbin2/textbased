@@ -17,24 +17,24 @@ def user_input(minhp ,maxhp):
   if player_input == "help" :
     print("type f to find a (new) monster \ntype a to atack")
   
-  if player_input == "f" :
+  elif player_input == "f" :
     mhp = random.randint(minhp, maxhp)
     bmhp = mhp
     spawned = True
-    print(f"a slime apeared {mhp}/{bmhp}\n")
+    print(f"\na slime apeared {mhp}/{bmhp}")
 
-  if player_input == "a" :
+  elif player_input == "a" :
     if spawned == False :
-      print("spawn a monster first\n")
+      print("spawn a monster first")
       return
     dmg = xp
     mhp -= dmg
     if mhp <= 0:
       xp += 1
-      print(f"the slime is dead \nxp = {xp}\n")
+      print(f"the slime is dead \nxp = {xp}")
       spawned = False
       return
-    print(f"the slime has {mhp}/{bmhp}\n")
+    print(f"the slime has {mhp}/{bmhp}")
 
 while level == 1 :
   user_input(1,10)
