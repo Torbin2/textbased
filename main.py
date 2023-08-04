@@ -1,4 +1,5 @@
 import random
+import json
 
 cheese = 0
 spawned = False
@@ -12,68 +13,6 @@ player_level = 1
 damage = 1
 
 print("input help for commands")
-
-def stats():
-  
-  global skilpoints
-  global player_level
-  global damage
-  global maxplayerhp
-
-  print("increase damage/max health whith 'd' and 'h'")
-  while skilpoints >= 1:
-    upgrade = input("upgrade ")
-    if upgrade == "d":
-      upgrades = int(input(f"choose amount of upgrades (you have {skilpoints} skillpoints) "))
-      if upgrades > skilpoints :
-        print("invalid amount")
-      if upgrades <= skilpoints:
-        damage += upgrades
-        skilpoints-= upgrades
-        print(f"you now deal {damage} damage")
-    elif upgrade == "h":
-      upgrades = int(input(f"choose amount of upgrades (you have {skilpoints} skillpoints) "))
-      if upgrades > skilpoints :
-        print("invalid amount")
-      elif upgrades <= skilpoints:
-          maxplayerhp += upgrades
-          skilpoints-= upgrades
-          print(f"your max health is now {maxplayerhp}")
-    else :
-      print("increase damage/max health whith 'd' and 'h'")
-
-def enemy_hit():
-  
-  global dodge_chance
-  global playerhp
-  global dead
-
-  damage_rng = random.randint(1,10)
-  if damage_rng > dodge_chance:
-    
-    if 0 <= dodge_chance <= 3:
-      print("enemy atack easily dodged")
-    elif 4 <= dodge_chance <= 7:
-      print("enemy atack dodged")
-    elif 8 <= dodge_chance <= 11:
-      print("enemy atack barely dodged")
-    dodge_chance += 1
-  
-  elif damage_rng <= dodge_chance:
-    
-    if 0 <= dodge_chance <= 3:
-      print("enemy atack barely hit")
-    elif 4 <= dodge_chance <= 7:
-      print("enemy atack hit")
-    elif 8 <= dodge_chance <= 11:
-      print("enemy atack easily hit")
-   
-    dodge_chance -= 1
-    playerhp -= 1
-    if playerhp <= 0:
-      dead = True
-      return
-    print(f"you have {playerhp} health")
 
 def user_input(minhp ,maxhp):
   player_input = input("\ninput = ")
@@ -150,6 +89,68 @@ def user_input(minhp ,maxhp):
 
   else :
     print("invalid input")
+
+def stats():
+  
+  global skilpoints
+  global player_level
+  global damage
+  global maxplayerhp
+
+  print("increase damage/max health whith 'd' and 'h'")
+  while skilpoints >= 1:
+    upgrade = input("upgrade ")
+    if upgrade == "d":
+      upgrades = int(input(f"choose amount of upgrades (you have {skilpoints} skillpoints) "))
+      if upgrades > skilpoints :
+        print("invalid amount")
+      if upgrades <= skilpoints:
+        damage += upgrades
+        skilpoints-= upgrades
+        print(f"you now deal {damage} damage")
+    elif upgrade == "h":
+      upgrades = int(input(f"choose amount of upgrades (you have {skilpoints} skillpoints) "))
+      if upgrades > skilpoints :
+        print("invalid amount")
+      elif upgrades <= skilpoints:
+          maxplayerhp += upgrades
+          skilpoints-= upgrades
+          print(f"your max health is now {maxplayerhp}")
+    else :
+      print("increase damage/max health whith 'd' and 'h'")
+
+def enemy_hit():
+  
+  global dodge_chance
+  global playerhp
+  global dead
+
+  damage_rng = random.randint(1,10)
+  if damage_rng > dodge_chance:
+    
+    if 0 <= dodge_chance <= 3:
+      print("enemy atack easily dodged")
+    elif 4 <= dodge_chance <= 7:
+      print("enemy atack dodged")
+    elif 8 <= dodge_chance <= 11:
+      print("enemy atack barely dodged")
+    dodge_chance += 1
+  
+  elif damage_rng <= dodge_chance:
+    
+    if 0 <= dodge_chance <= 3:
+      print("enemy atack barely hit")
+    elif 4 <= dodge_chance <= 7:
+      print("enemy atack hit")
+    elif 8 <= dodge_chance <= 11:
+      print("enemy atack easily hit")
+   
+    dodge_chance -= 1
+    playerhp -= 1
+    if playerhp <= 0:
+      dead = True
+      return
+    print(f"you have {playerhp} health")
 
 while level == 1 :
   user_input(1,10)
