@@ -1,3 +1,4 @@
+import os
 import random
 import json
 
@@ -17,8 +18,6 @@ print("input help for commands")
 def user_input(minhp ,maxhp):
   player_input = input("\ninput = ")
   
-  global enemy_hit
-  global stats
   global skilpoints
   global spawned
   global mhp
@@ -28,14 +27,17 @@ def user_input(minhp ,maxhp):
   global maxplayerhp
   global damage
 
-
   if player_input == "help" :
     print("type f to find a (new) monster \ntype a to atack\ntype h to heal using cheese\ntype i to check player info`")
-    print("type s to assign skilpoints")
+    print("type s to assign skilpoints\ntype 'save' to save\ntype 'load' to load any prevous saved games stats")
   
   elif player_input == "test":
-    print("no current tests")
-  
+    print("no test!")
+
+  elif player_input == "save":
+    save_config()
+  elif player_input == "load":
+    load_config()
   elif player_input == "i":
     print(f"{playerhp}/{maxplayerhp} health\n{skilpoints} skilpoints\n{cheese} cheese\n{dodge_chance}/10 dodge chance (lower is better)")
 
@@ -151,6 +153,61 @@ def enemy_hit():
       dead = True
       return
     print(f"you have {playerhp} health")
+
+def save_config():
+
+  global cheese
+  global skilpoints
+  global level
+  global maxplayerhp
+  global playerhp
+  global dodge_chance
+  global player_level 
+  global damage 
+
+
+  with open("config.json", 'w') as file:
+    json.dump({
+      "cheese": cheese,
+      "skilpoints": skilpoints,
+      "level" : level,
+     "maxplayerhp" : maxplayerhp,
+      "playerhp"  : playerhp,
+     "dodge_chance" : dodge_chance,
+      "player_level" : player_level,
+      "damage" : damage
+    }, file)
+
+def load_config():
+
+  global cheese
+  global skilpoints
+  global level
+  global maxplayerhp
+  global playerhp
+  global dodge_chance
+  global player_level 
+  global damage 
+
+  if "config.json" not in os.listdir("."):
+    save_config()
+    return
+  
+  with open("config.json", "r") as file:
+    try:
+      data: dict = json.load(file)
+
+      cheese = data["cheese"]
+      skilpoints = data["skilpoints"]
+      level = ["level"]
+      maxplayerhp = ["maxplayerhp"]
+      playerhp = ["playerhp"]
+      dodge_chance = ["dodge_chance"]
+      player_level = ["player_level"]
+      damage = ["damage"]
+    except Exception as e:
+      print(str(e))
+
 
 while level == 1 :
   user_input(1,10)
