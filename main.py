@@ -199,12 +199,12 @@ def load_config():
 
       cheese = data["cheese"]
       skilpoints = data["skilpoints"]
-      level = ["level"]
-      maxplayerhp = ["maxplayerhp"]
-      playerhp = ["playerhp"]
-      dodge_chance = ["dodge_chance"]
-      player_level = ["player_level"]
-      damage = ["damage"]
+      level = data["level"]
+      maxplayerhp = data["maxplayerhp"]
+      playerhp = data["playerhp"]
+      dodge_chance = data["dodge_chance"]
+      player_level = data["player_level"]
+      damage = data["damage"]
     except Exception as e:
       print(str(e))
 
