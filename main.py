@@ -4,21 +4,23 @@ import json
 
 cheese = 0
 spawned = False
-skilpoints = 0
-level = 1
+skillpoints = 0
+stage_dificulty = 1
 maxplayerhp = 20
 playerhp = 20
 dodge_chance = 5
 dead = False
 player_level = 1
 damage = 1
+game_on = True
+exp = 0
 
 print("input help for commands")
 
-def user_input(minhp ,maxhp):
+def user_input():
   player_input = input("\ninput = ")
   
-  global skilpoints
+  global skillpoints
   global spawned
   global mhp
   global bmhp
@@ -26,11 +28,14 @@ def user_input(minhp ,maxhp):
   global playerhp
   global maxplayerhp
   global damage
+  global exp
+  global exp_requirement
+  global stage_dificulty
 
   if player_input == "help" :
     print("type f to find a (new) monster \ntype a to atack\ntype h to heal using cheese\ntype i to check player info`")
-    print("type s to assign skilpoints\ntype 'save' to save\ntype 'load' to load any prevous saved games stats")
-  
+    print("type s to assign skillpoints\ntype 'save' to save\ntype 'load' to load any prevous saved games stats")
+    print("type 't' to travel to a place with harder enemies")
   elif player_input == "test":
     print("no test!")
 
@@ -39,31 +44,18 @@ def user_input(minhp ,maxhp):
   elif player_input == "load":
     load_config()
   elif player_input == "i":
-    print(f"{playerhp}/{maxplayerhp} health\n{skilpoints} skilpoints\n{cheese} cheese\n{dodge_chance}/10 dodge chance (lower is better)")
-
+    print(f"{playerhp}/{maxplayerhp} health\n{skillpoints} skillpoints\n{cheese} cheese\n{dodge_chance}/10 dodge chance (lower is better)")
+    print(f"level {player_level}\ndamage {damage}")
   elif player_input == "f" :
-    spawnrng = random.randint(1,20)
-    if spawnrng <= 10:
-      mhp = random.randint(minhp, maxhp)
-      bmhp = mhp
-      spawned = True
-      print(f"a slime apeared with {mhp}/{bmhp} health")
-    
-    if spawnrng >= 11 and spawnrng <= 19:
-      cheese += 1
-      print(f"you found a piece cheese, you have {cheese}")
-    if spawnrng == 20:
-      cheese += 3
-      print(f"you found a lot of cheese, you have {cheese}")
-      
+    spawning(stage_dificulty,3*stage_dificulty)
   elif player_input == "a" :
     if spawned == False :
       print("spawn a monster first")
       return
     mhp -= damage
     if mhp <= 0:
-      skilpoints += 1
-      print(f"the slime is dead \nxp = {skilpoints}")
+      exp += stage_dificulty * random.random(1,3)
+      print(f"the slime is dead {exp}/{exp_requirement}")
       spawned = False
       return
     print(f"the slime has {mhp}/{bmhp} health")
@@ -89,37 +81,75 @@ def user_input(minhp ,maxhp):
   elif player_input == "s":
     stats()
 
+  elif player_input == "t":
+    stage_dificulty = int(input("stage difficulty = "))
+    print(f"travaling to biome {stage_dificulty}")
+
+
   else :
     print("invalid input")
 
 def stats():
   
-  global skilpoints
+  global skillpoints
   global player_level
   global damage
   global maxplayerhp
 
   print("increase damage/max health whith 'd' and 'h'")
-  while skilpoints >= 1:
+  if skillpoints >= 1:
     upgrade = input("upgrade ")
     if upgrade == "d":
-      upgrades = int(input(f"choose amount of upgrades (you have {skilpoints} skillpoints) "))
-      if upgrades > skilpoints :
+      upgrades = int(input(f"choose amount of upgrades (you have {skillpoints} skillpoints) "))
+      if upgrades > skillpoints :
         print("invalid amount")
-      if upgrades <= skilpoints:
+      if upgrades <= skillpoints:
         damage += upgrades
-        skilpoints-= upgrades
+        skillpoints-= upgrades
         print(f"you now deal {damage} damage")
     elif upgrade == "h":
-      upgrades = int(input(f"choose amount of upgrades (you have {skilpoints} skillpoints) "))
-      if upgrades > skilpoints :
+      upgrades = int(input(f"choose amount of upgrades (you have {skillpoints} skillpoints) "))
+      if upgrades > skillpoints :
         print("invalid amount")
-      elif upgrades <= skilpoints:
+      elif upgrades <= skillpoints:
           maxplayerhp += upgrades
-          skilpoints-= upgrades
+          skillpoints-= upgrades
           print(f"your max health is now {maxplayerhp}")
     else :
       print("increase damage/max health whith 'd' and 'h'")
+  else :
+    print("no skillpoints")
+
+def spawning(minhp,maxhp):
+  global cheese
+  global spawned
+  global mhp
+  global bmhp
+  if spawned == True:
+      print("the slime tried to atack you")
+      run = random.randint(1,2)
+      if run == 1:
+        print("you got away")
+        spawned = False
+        return
+      if run == 2:
+        print("you didn't get away")
+        enemy_hit()
+        return
+  spawnrng = random.randint(1,20)
+  if spawnrng <= 15:
+    mhp = random.randint(minhp, maxhp)
+    bmhp = mhp
+    spawned = True
+    print(f"a slime apeared with {mhp}/{bmhp} health")
+    
+  if spawnrng >= 15 and spawnrng <= 19:
+    cheese += 1
+    print(f"you found a piece cheese, you have {cheese}")
+  if spawnrng == 20:
+    cheese += 3
+    print(f"you found a lot of cheese, you have {cheese}")
+      
 
 def enemy_hit():
   
@@ -148,7 +178,7 @@ def enemy_hit():
       print("enemy atack easily hit")
    
     dodge_chance -= 1
-    playerhp -= 1
+    playerhp -= stage_dificulty * random.randint(1,stage_dificulty)
     if playerhp <= 0:
       dead = True
       return
@@ -157,65 +187,72 @@ def enemy_hit():
 def save_config():
 
   global cheese
-  global skilpoints
-  global level
+  global skillpoints
+  global stage_dificulty
   global maxplayerhp
   global playerhp
   global dodge_chance
   global player_level 
-  global damage 
+  global damage
+  global exp
 
 
   with open("config.json", 'w') as file:
     json.dump({
       "cheese": cheese,
-      "skilpoints": skilpoints,
-      "level" : level,
+      "skillpoints": skillpoints,
+      "stage_dificulty" : stage_dificulty,
      "maxplayerhp" : maxplayerhp,
       "playerhp"  : playerhp,
      "dodge_chance" : dodge_chance,
       "player_level" : player_level,
-      "damage" : damage
+      "damage" : damage,
+      "exp" : exp
     }, file)
 
 def load_config():
 
   global cheese
-  global skilpoints
-  global level
+  global skillpoints
+  global stage_dificulty
   global maxplayerhp
   global playerhp
   global dodge_chance
   global player_level 
   global damage 
+  global exp
 
   if "config.json" not in os.listdir("."):
     save_config()
     return
   
-  with open("config.json", "r") as file:
-    try:
-      data: dict = json.load(file)
+  with open("config.json", "r") as f:
+      data: dict = json.load(f)
 
       cheese = data["cheese"]
-      skilpoints = data["skilpoints"]
-      level = ["level"]
-      maxplayerhp = ["maxplayerhp"]
-      playerhp = ["playerhp"]
-      dodge_chance = ["dodge_chance"]
-      player_level = ["player_level"]
-      damage = ["damage"]
-    except Exception as e:
-      print(str(e))
+      skillpoints = data["skillpoints"]
+      stage_dificulty = data["stage_dificulty"]
+      maxplayerhp = data["maxplayerhp"]
+      playerhp = data["playerhp"]
+      dodge_chance = data["dodge_chance"]
+      player_level = data["player_level"]
+      damage = data["damage"]
+      exp = data["exp"]
 
+def check():
+  global player_level
+  global skillpoints
+  global exp_requirement
+  
+  exp_requirement = 0.5 * 2**player_level
+  if exp >= exp_requirement:
+    exp -= exp_requirement
+    player_level += 1
+    skillpoints += 1
+    print(f"level up to level {player_level}")
+  if dead == True:
+    print("your dead,reset")
 
-while level == 1 :
-  user_input(1,10)
-  if skilpoints >= 5:
-    level = 2
-  if dead == True:
-    print("your dead")
-while level == 2:
-  user_input(10,30)
-  if dead == True:
-    print("your dead")
+while game_on == True :
+  user_input()
+  check()
