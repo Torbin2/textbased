@@ -5,12 +5,12 @@ import json
 cheese = 0
 spawned = False
 skillpoints = 0
-stage_dificulty = 1
+stage_difficulty = 1
 maxplayerhp = 20
 playerhp = 20
 dodge_chance = 5
 dead = False
-player_level = 1
+player_level = 0
 damage = 1
 game_on = True
 exp = 0
@@ -30,7 +30,7 @@ def user_input():
   global damage
   global exp
   global exp_requirement
-  global stage_dificulty
+  global stage_difficulty
 
   if player_input == "help" :
     print("type f to find a (new) monster \ntype a to atack\ntype h to heal using cheese\ntype i to check player info`")
@@ -45,17 +45,17 @@ def user_input():
     load_config()
   elif player_input == "i":
     print(f"{playerhp}/{maxplayerhp} health\n{skillpoints} skillpoints\n{cheese} cheese\n{dodge_chance}/10 dodge chance (lower is better)")
-    print(f"level {player_level}\ndamage {damage}")
+    print(f"level {player_level}\ndmg {damage}\n{exp}/{exp_requirement} exp")
   elif player_input == "f" :
-    spawning(stage_dificulty,3*stage_dificulty)
+    spawning(stage_difficulty,3*stage_difficulty)
   elif player_input == "a" :
     if spawned == False :
       print("spawn a monster first")
       return
     mhp -= damage
     if mhp <= 0:
-      exp += stage_dificulty * random.random(1,3)
-      print(f"the slime is dead {exp}/{exp_requirement}")
+      exp += stage_difficulty * random.randint(1,3)
+      print(f"the slime is dead {exp}/{exp_requirement} exp to next level")
       spawned = False
       return
     print(f"the slime has {mhp}/{bmhp} health")
@@ -82,8 +82,8 @@ def user_input():
     stats()
 
   elif player_input == "t":
-    stage_dificulty = int(input("stage difficulty = "))
-    print(f"travaling to biome {stage_dificulty}")
+    stage_difficulty = int(input("stage difficulty = "))
+    print(f"travaling to biome {stage_difficulty}")
 
 
   else :
@@ -178,7 +178,7 @@ def enemy_hit():
       print("enemy atack easily hit")
    
     dodge_chance -= 1
-    playerhp -= stage_dificulty * random.randint(1,stage_dificulty)
+    playerhp -= stage_difficulty * random.randint(1,stage_difficulty)
     if playerhp <= 0:
       dead = True
       return
@@ -188,7 +188,7 @@ def save_config():
 
   global cheese
   global skillpoints
-  global stage_dificulty
+  global stage_difficulty
   global maxplayerhp
   global playerhp
   global dodge_chance
@@ -201,7 +201,7 @@ def save_config():
     json.dump({
       "cheese": cheese,
       "skillpoints": skillpoints,
-      "stage_dificulty" : stage_dificulty,
+      "stage_difficulty" : stage_difficulty,
      "maxplayerhp" : maxplayerhp,
       "playerhp"  : playerhp,
      "dodge_chance" : dodge_chance,
@@ -214,7 +214,7 @@ def load_config():
 
   global cheese
   global skillpoints
-  global stage_dificulty
+  global stage_difficulty
   global maxplayerhp
   global playerhp
   global dodge_chance
@@ -231,7 +231,7 @@ def load_config():
 
       cheese = data["cheese"]
       skillpoints = data["skillpoints"]
-      stage_dificulty = data["stage_dificulty"]
+      stage_difficulty = data["stage_difficulty"]
       maxplayerhp = data["maxplayerhp"]
       playerhp = data["playerhp"]
       dodge_chance = data["dodge_chance"]
@@ -243,8 +243,13 @@ def check():
   global player_level
   global skillpoints
   global exp_requirement
+  global exp
   
-  exp_requirement = 0.5 * 2**player_level
+  
+  if player_level == 0:
+    exp_requirement = 1
+  else:
+    exp_requirement = 2 ** player_level
   if exp >= exp_requirement:
     exp -= exp_requirement
     player_level += 1
