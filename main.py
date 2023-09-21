@@ -15,6 +15,26 @@ damage = 1
 game_on = True
 exp = 0
 
+textbased_logo = """
+       /\\ 
+      /  \\
+     /    \\
+    /      \\
+   /   _    \\
+  /   / \\    \\
+ /   /   \\    \\
+/___/_____\\____\\
+\\   \\   /    /
+ \\   \\ /    /
+  \\   /    /
+   \\ /    /
+    \\    /
+     \\  /
+      \\/
+"""
+
+print(textbased_logo)
+
 print("input help for commands")
 
 def user_input():
@@ -37,7 +57,7 @@ def user_input():
     print("type s to assign skillpoints\ntype 'save' to save\ntype 'load' to load any prevous saved games stats")
     print("type 't' to travel to a place with harder enemies")
   elif player_input == "test":
-    print("no test!")
+    print("                                   no")
 
   elif player_input == "save":
     save_config()
@@ -55,7 +75,7 @@ def user_input():
     mhp -= damage
     if mhp <= 0:
       exp += stage_difficulty * random.randint(1,3)
-      print(f"the slime is dead {exp}/{exp_requirement} exp to next level")
+      print(f"the slime is dead \n{exp}/{exp_requirement} exp to next level")
       spawned = False
       return
     print(f"the slime has {mhp}/{bmhp} health")
@@ -77,6 +97,7 @@ def user_input():
         healing_amount = healing_amount - healthcheck
         playerhp = maxplayerhp
       print(f"you healed {healing_amount} hp\ntotal hp = {playerhp}")
+    print(f"{cheese} cheese")
  
   elif player_input == "s":
     stats()
@@ -137,7 +158,7 @@ def spawning(minhp,maxhp):
         enemy_hit()
         return
   spawnrng = random.randint(1,20)
-  if spawnrng <= 15:
+  if spawnrng <= 14:
     mhp = random.randint(minhp, maxhp)
     bmhp = mhp
     spawned = True
@@ -147,7 +168,7 @@ def spawning(minhp,maxhp):
     cheese += 1
     print(f"you found a piece cheese, you have {cheese}")
   if spawnrng == 20:
-    cheese += 3
+    cheese += 7
     print(f"you found a lot of cheese, you have {cheese}")
       
 
@@ -239,6 +260,7 @@ def load_config():
       damage = data["damage"]
       exp = data["exp"]
 
+
 def check():
   global player_level
   global skillpoints
@@ -255,9 +277,13 @@ def check():
     player_level += 1
     skillpoints += 1
     print(f"level up to level {player_level}")
-  if dead == True:
-    print("your dead,reset")
+
 
 while game_on == True :
+  if dead == True:
+    print("you have been nubt\n reloading save")
+    load_config()
+    stage_difficulty = 1
+    dead = False
   user_input()
   check()
