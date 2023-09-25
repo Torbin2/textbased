@@ -14,6 +14,7 @@ player_level = 0
 damage = 1
 game_on = True
 exp = 0
+cheese_mode = False
 
 textbased_logo = """
        /\\ 
@@ -51,22 +52,40 @@ def user_input():
   global exp
   global exp_requirement
   global stage_difficulty
+  global cheese_mode
+  global dodge_chance
+  global dead
 
   if player_input == "help" :
     print("type f to find a (new) monster \ntype a to atack\ntype h to heal using cheese\ntype i to check player info`")
     print("type s to assign skillpoints\ntype 'save' to save\ntype 'load' to load any prevous saved games stats")
     print("type 't' to travel to a place with harder enemies")
+    print("type 'cheese' to enter cheese mode")
   elif player_input == "test":
-    print("                                   no")
-
+    print("yes                                   no")
+  elif player_input == "cheese":
+    cheese_mode = not cheese_mode
   elif player_input == "save":
     save_config()
   elif player_input == "load":
     load_config()
+    cheese_mode = False
   elif player_input == "i":
+    if cheese_mode == True:
+      print("your in cheesemode")
+      return
     print(f"{playerhp}/{maxplayerhp} health\n{skillpoints} skillpoints\n{cheese} cheese\n{dodge_chance}/10 dodge chance (lower is better)")
     print(f"level {player_level}\ndmg {damage}\n{exp}/{exp_requirement} exp")
   elif player_input == "f" :
+    if cheese_mode == True:
+      cheese += 1
+      print(f"you found a piece cheese, you have {cheese}")
+      playerhp -= 1
+      dodge_chance +=1
+      if playerhp <= 0:
+        dead = True
+        return
+      return
     spawning(stage_difficulty,3*stage_difficulty)
   elif player_input == "a" :
     if spawned == False :
@@ -82,6 +101,9 @@ def user_input():
     enemy_hit()
 
   elif player_input == "h":
+    if cheese_mode == True:
+      print("your in cheesemode")
+      return
     if cheese == 0 and playerhp == maxplayerhp:
       print("insufficient cheese and already at full health")
     elif cheese == 0:
@@ -103,9 +125,12 @@ def user_input():
     stats()
 
   elif player_input == "t":
-    stage_difficulty = int(input("stage difficulty = "))
+    try :
+     stage_difficulty = int(input("stage difficulty = "))    
+    except ValueError:
+      print("thats not a int")
+      return
     print(f"travaling to biome {stage_difficulty}")
-
 
   else :
     print("invalid input")
@@ -133,7 +158,8 @@ def stats():
       if upgrades > skillpoints :
         print("invalid amount")
       elif upgrades <= skillpoints:
-          maxplayerhp += upgrades
+        for i in range(upgrades):
+          maxplayerhp += maxplayerhp
           skillpoints-= upgrades
           print(f"your max health is now {maxplayerhp}")
     else :
