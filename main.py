@@ -81,7 +81,8 @@ def user_input():
       cheese += 1
       print(f"you found a piece cheese, you have {cheese}")
       playerhp -= 1
-      dodge_chance +=1
+      if dodge_chance > 0:
+        dodge_chance -=1
       if playerhp <= 0:
         dead = True
         return
@@ -131,7 +132,6 @@ def user_input():
       print("thats not a int")
       return
     print(f"travaling to biome {stage_difficulty}")
-
   else :
     print("invalid input")
 
@@ -293,7 +293,7 @@ def check():
   global exp_requirement
   global exp
   
-  
+
   if player_level == 0:
     exp_requirement = 1
   else:
@@ -304,12 +304,12 @@ def check():
     skillpoints += 1
     print(f"level up to level {player_level}")
 
-
 while game_on == True :
   if dead == True:
     print("you have been nubt\n reloading save")
     load_config()
     stage_difficulty = 1
+    cheese_mode = False
     dead = False
+  check()  
   user_input()
-  check()
