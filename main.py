@@ -127,7 +127,8 @@ def user_input():
 
   elif player_input == "t":
     try :
-     stage_difficulty = int(input("stage difficulty = "))    
+     stage_difficulty = int(input("stage difficulty = "))  
+       spawned = False
     except ValueError:
       print("thats not a int")
       return
@@ -225,7 +226,7 @@ def enemy_hit():
       print("enemy atack easily hit")
    
     dodge_chance -= 1
-    playerhp -= stage_difficulty * random.randint(1,stage_difficulty)
+    playerhp -= stage_difficulty + random.randint(1,stage_difficulty)
     if playerhp <= 0:
       dead = True
       return
